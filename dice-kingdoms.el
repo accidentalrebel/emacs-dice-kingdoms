@@ -25,9 +25,9 @@
 
 ;;; Code:
 
-(defvar dice-kingdoms--game-area-width 100)
-(defvar dice-kingdoms--game-area-height 25)
-(defvar dice-kingdoms--play-area-dimensions '(2 2 96 20))
+(defvar dice-kingdoms--game-area-width 80)
+(defvar dice-kingdoms--game-area-height 35)
+(defvar dice-kingdoms--play-area-dimensions '(2 2 76 31))
 (defvar dice-kingdoms--buffer-name "*dice-kingdoms*")
 
 (defun dice-kingdoms ()
@@ -47,22 +47,25 @@
   (let* ((play-area-padding 4)
 	 (territory-padding 2)
 	 (num-of-territories-horizontal 8)
+	 (num-of-territories-vertical 3)
 	 (partition-width (/ (- (nth 2 dice-kingdoms--play-area-dimensions) (* play-area-padding)) num-of-territories-horizontal))
-	 (partition-height 10)
+	 (partition-height (/ (- (nth 3 dice-kingdoms--play-area-dimensions) (* play-area-padding)) num-of-territories-vertical))
 	 (territory-width (- partition-width (* 2 territory-padding)))
+	 (territory-height (- partition-height (* 2 territory-padding)))
 	 rolled)
-    (dotimes (x-index num-of-territories-horizontal)
-      (dice-kingdoms--create-territory (+ (* x-index partition-width) (random territory-width) play-area-padding)
-				       15)
+    (dotimes (y-index num-of-territories-vertical)
+      (dotimes (x-index num-of-territories-horizontal)
+	(dice-kingdoms--create-territory (+ (* x-index partition-width) (random territory-width) play-area-padding)
+					 (+ (* y-index partition-height) (random territory-height) play-area-padding)))
       ))
   )
 
 (defun dice-kingdoms--create-territory (col row)
   ""
   (let ((play-area-x (car dice-kingdoms--play-area-dimensions))
-	(play-area-y (car dice-kingdoms--play-area-dimensions)))
+	(play-area-y (nth 1 dice-kingdoms--play-area-dimensions)))
     (message "Placing at %s, %s" col row)
-    (coordinate-place-char-at (+ play-area-x col) row "x"))
+    (coordinate-place-char-at (+ play-area-x col) (+ play-area-y row) "x"))
   )
 
 (defun dice-kingdoms--setup-play-area ()
