@@ -33,7 +33,8 @@
 (defun dice-kingdoms ()
   ""
   (interactive)
-  (devenv-smart-open-elisp-output-window dice-kingdoms--buffer-name)
+  (when (not (string= (buffer-name) dice-kingdoms--buffer-name))
+    (devenv-smart-open-elisp-output-window dice-kingdoms--buffer-name))
   (erase-buffer)
   (coordinate-initialize-view-area dice-kingdoms--game-area-width dice-kingdoms--game-area-height ".")
   (dice-kingdoms--setup-play-area)
