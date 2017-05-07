@@ -25,16 +25,20 @@
 
 ;;; Code:
 
-(defvar dice-kingdoms--game-area-width 80)
-(defvar dice-kingdoms--game-area-height 35)
-(defvar dice-kingdoms--play-area-dimensions '(2 2 76 31))
-(defvar dice-kingdoms--buffer-name "*dice-kingdoms*")
+(defvar dice-kingdoms--game-area-width 80 "The width of the game area.")
+(defvar dice-kingdoms--game-area-height 35 "The height of the game area.")
+(defvar dice-kingdoms--play-area-dimensions '(2 2 76 31) "The dimensions of the area.  The data are as follows: (START_COL START_ROW WIDTH HEIGHT).")
+(defvar dice-kingdoms--territory-list '() "The list containing the territories.")
+(defvar dice-kingdoms--buffer-name "*dice-kingdoms*" "The name of the buffer for this game.")
 
 (defun dice-kingdoms ()
   ""
   (interactive)
   (when (not (string= (buffer-name) dice-kingdoms--buffer-name))
     (devenv-smart-open-elisp-output-window dice-kingdoms--buffer-name))
+
+  (setq dice-kingdoms--territory-list '())
+  
   (erase-buffer)
   (coordinate-initialize-view-area dice-kingdoms--game-area-width dice-kingdoms--game-area-height ".")
   (dice-kingdoms--setup-play-area)
@@ -66,7 +70,10 @@
   (let ((play-area-x (car dice-kingdoms--play-area-dimensions))
 	(play-area-y (nth 1 dice-kingdoms--play-area-dimensions)))
     (message "Placing at %s, %s" col row)
-    (coordinate-place-char-at (+ play-area-x col) (+ play-area-y row) "x"))
+    (coordinate-place-char-at (+ play-area-x col) (+ play-area-y row) "x")
+    (push `(:col ,col :row ,row) dice-kingdoms--territory-list)
+    (message "Added: %s" dice-kingdoms--territory-list)
+    )
   )
 
 (defun dice-kingdoms--setup-play-area ()
