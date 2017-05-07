@@ -44,13 +44,14 @@
 ;;
 (defun dice-kingdoms--initialize-world ()
   ""
-  (let* ((play-area-padding 2)
-	 (territory-padding 2)g
-	 (play-area-horizontal-division 10)
-	 (partition-width (/ (- (nth 2 dice-kingdoms--play-area-dimensions) (* play-area-padding)) play-area-horizontal-division))
+  (let* ((play-area-padding 4)
+	 (territory-padding 2)
+	 (num-of-territories-horizontal 8)
+	 (partition-width (/ (- (nth 2 dice-kingdoms--play-area-dimensions) (* play-area-padding)) num-of-territories-horizontal))
 	 (partition-height 10)
-	 (territory-width (- partition-width territory-padding)))
-    (dotimes (x-index play-area-horizontal-division)
+	 (territory-width (- partition-width (* 2 territory-padding)))
+	 rolled)
+    (dotimes (x-index num-of-territories-horizontal)
       (dice-kingdoms--create-territory (+ (* x-index partition-width) (random territory-width) play-area-padding)
 				       15)
       ))
