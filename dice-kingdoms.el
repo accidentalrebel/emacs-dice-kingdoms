@@ -44,31 +44,30 @@
 ;;
 (defun dice-kingdoms--initialize-world ()
   ""
-  (let* ((play-area-x (car dice-kingdoms--play-area-dimensions))
-	 (play-area-y (car dice-kingdoms--play-area-dimensions))
-	 (territory-padding 2)
-	 (play-area-padding 2)
+  (let* ((play-area-padding 2)
+	 (territory-padding 2)g
 	 (play-area-horizontal-division 10)
 	 (partition-width (/ (- (nth 2 dice-kingdoms--play-area-dimensions) (* play-area-padding)) play-area-horizontal-division))
 	 (partition-height 10)
 	 (territory-width (- partition-width territory-padding)))
     (dotimes (x-index play-area-horizontal-division)
-      (dice-kingdoms--create-territory
-       (+ play-area-x (+ (* x-index partition-width) (random territory-width) play-area-padding))
-       15)
+      (dice-kingdoms--create-territory (+ (* x-index partition-width) (random territory-width) play-area-padding)
+				       15)
       ))
+  )
+
+(defun dice-kingdoms--create-territory (col row)
+  ""
+  (let ((play-area-x (car dice-kingdoms--play-area-dimensions))
+	(play-area-y (car dice-kingdoms--play-area-dimensions)))
+    (message "Placing at %s, %s" col row)
+    (coordinate-place-char-at (+ play-area-x col) row "x"))
   )
 
 (defun dice-kingdoms--setup-play-area ()
   ""
   (coordinate-place-char-at-area (car dice-kingdoms--play-area-dimensions) (nth 1 dice-kingdoms--play-area-dimensions)
 		      (nth 2 dice-kingdoms--play-area-dimensions) (nth 3 dice-kingdoms--play-area-dimensions) "~")
-  )
-
-(defun dice-kingdoms--create-territory (col row)
-  ""
-  (message "Placing at %s, %s" col row)
-  (coordinate-place-char-at col row "x")
   )
 
 (provide 'dice-kingdoms)
