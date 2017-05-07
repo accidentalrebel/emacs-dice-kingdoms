@@ -40,11 +40,18 @@
 
 (defun dice-kingdoms--initialize-world ()
   ""
-  (dice-kingdoms--create-territory (random dice-kingdoms--play-area-width) (random dice-kingdoms--play-area-height))
+  (let ((partition-width (/ dice-kingdoms--play-area-width 5))
+	(partition-height 10))
+    (dotimes (x-index 5)
+      (dice-kingdoms--create-territory
+       (+ (* x-index partition-width) (random partition-width))
+       10)
+      ))
   )
 
 (defun dice-kingdoms--create-territory (col row)
   ""
+  (message "Placing at %s, %s" col row)
   (coordinate-place-char-at col row "x")
   )
 
