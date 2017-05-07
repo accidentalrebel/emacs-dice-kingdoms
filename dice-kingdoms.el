@@ -25,8 +25,9 @@
 
 ;;; Code:
 
-(defvar dice-kingdoms--play-area-width 100)
-(defvar dice-kingdoms--play-area-height 20)
+(defvar dice-kingdoms--game-area-width 100)
+(defvar dice-kingdoms--game-area-height 25)
+(defvar dice-kingdoms--play-area-dimensions '(2 2 96 20))
 (defvar dice-kingdoms--buffer-name "*dice-kingdoms*")
 
 (defun dice-kingdoms ()
@@ -34,19 +35,28 @@
   (interactive)
   (devenv-smart-open-elisp-output-window dice-kingdoms--buffer-name)
   (erase-buffer)
-  (coordinate-initialize-view-area dice-kingdoms--play-area-width dice-kingdoms--play-area-height "-")
+  (coordinate-initialize-view-area dice-kingdoms--game-area-width dice-kingdoms--game-area-height ".")
+  (dice-kingdoms--setup-play-area)
   (dice-kingdoms--initialize-world)
   )
 
+;; SETUP
+;;
 (defun dice-kingdoms--initialize-world ()
   ""
-  (let ((partition-width (/ dice-kingdoms--play-area-width 5))
+  (let ((partition-width (/ dice-kingdoms--game-area-width 5))
 	(partition-height 10))
     (dotimes (x-index 5)
       (dice-kingdoms--create-territory
        (+ (* x-index partition-width) (random partition-width))
        10)
       ))
+  )
+
+(defun dice-kingdoms--setup-play-area ()
+  ""
+  (coordinate-place-char-at-area (car dice-kingdoms--play-area-dimensions) (nth 1 dice-kingdoms--play-area-dimensions)
+		      (nth 2 dice-kingdoms--play-area-dimensions) (nth 3 dice-kingdoms--play-area-dimensions) "~")
   )
 
 (defun dice-kingdoms--create-territory (col row)
