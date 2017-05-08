@@ -87,25 +87,34 @@
     )
   )
 
-(defun dice-kingdoms--is-area-occupied-by-territory ()
-  ""
-  
+(defun dice-kingdoms--is-area-occupied-by-territory (col row)
+  "Check if the given COL and ROW coordinate is already occupied.
+Considers all owned coordinates of each territory when checking."
+  (dolist (territory dice-kingdoms--territory-list)
+    
+    )
+  t
+  )
+
+(defun dice-kingdoms--get-initial-territory-coordinates (col row)
+  "Gets the surronding coordinates for the given COL and ROW."
+  `((,col ,row)
+    (,(- col 1) ,(- row 1))
+    (,col ,(- row 1))
+    (,(+ col 1) ,(- row 1))
+    (,(- col 1) ,row)
+    (,(+ col 1) ,row)
+    (,(- col 1) ,(+ row 1))
+    (,col ,(+ row 1))
+    (,(+ col 1) ,(+ row 1)))
   )
 
 (defun dice-kingdoms--create-territory (col row)
   ""
   (setq col 10)
   (setq row 10)
-  (let* ((coordinates `((,col ,row)
-			(,(- col 1) ,(- row 1))
-			(,col ,(- row 1))
-			(,(+ col 1) ,(- row 1))
-			(,(- col 1) ,row)
-			(,(+ col 1) ,row)
-			(,(- col 1) ,(+ row 1))
-			(,col ,(+ row 1))
-			(,(+ col 1) ,(+ row 1))))
-	 (territory-plist `(:col ,col :row ,row :coordinates ,coordinates)))
+  (let* ((owned (dice-kingdoms--get-initial-territory-coordinates col row))
+	 (territory-plist `(:col ,col :row ,row :owned ,owned)))
     (message "Added: %s" territory-plist)
     (push territory-plist dice-kingdoms--territory-list)
     territory-plist
