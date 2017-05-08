@@ -88,8 +88,19 @@
 
 (defun dice-kingdoms--create-territory (col row)
   ""
-  (let ((territory-plist `(:col ,col :row ,row)))
-    (message "Added: %s" dice-kingdoms--territory-list)
+  (setq col 10)
+  (setq row 10)
+  (let* ((coordinates `((,col ,row)
+			(,(- col 1) ,(- row 1))
+			(,col ,(- row 1))
+			(,(+ col 1) ,(- row 1))
+			(,(- col 1) ,row)
+			(,(+ col 1) ,row)
+			(,(- col 1) ,(+ row 1))
+			(,col ,(+ row 1))
+			(,(+ col 1) ,(+ row 1))))
+	 (territory-plist `(:col ,col :row ,row :coordinates ,coordinates)))
+    (message "Added: %s" territory-plist)
     (push territory-plist dice-kingdoms--territory-list)
     territory-plist
     )
