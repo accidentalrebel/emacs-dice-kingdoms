@@ -7,8 +7,8 @@
 
 (ert-deftest dice-kingdoms--get-overlapping-owned-coordinates ()
   (with-temp-buffer
-    (setq-local dice-kingdoms--territory-list '((:col 10 :row 10)))
-    (should (equal (dice-kingdoms--get-overlapping-owned-coordinates 10 10) '((11 11) (10 11) (9 11) (11 10) (10 10) (9 10) (11 9) (10 9) (9 9))))
+    (setq-local dice-kingdoms--territory-list `(,(dice-kingdoms--create-territory 10 10)))
+    (should (equal (dice-kingdoms--get-overlapping-owned-coordinates dice-kingdoms--territory-list (dice-kingdoms--create-territory 10 10)) '((11 11) (10 11) (9 11) (11 10) (10 10) (9 10) (11 9) (10 9) (9 9))))
   ))
 
 (ert-deftest dice-kingdoms--create-territory ()
