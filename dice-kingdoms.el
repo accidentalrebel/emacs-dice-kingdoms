@@ -49,7 +49,7 @@
 ;;
 (defun dice-kingdoms--generate-map ()
   ""
-  (let ((play-area-padding 4)
+  (let ((play-area-padding 2)
 	(num-of-territories 30)
 	(play-area-width (nth 2 dice-kingdoms--play-area-dimensions))
 	(play-area-height (nth 3 dice-kingdoms--play-area-dimensions))
@@ -57,8 +57,8 @@
 	rolled-row
 	current-territory)
     (dotimes (count num-of-territories)
-      (setq rolled-col (+ (random (- play-area-width play-area-padding)) play-area-padding))
-      (setq rolled-row (+ (random (- play-area-height play-area-padding)) play-area-padding))
+      (setq rolled-col (+ (random (- play-area-width (* 2 play-area-padding))) play-area-padding))
+      (setq rolled-row (+ (random (- play-area-height (* 2 play-area-padding))) play-area-padding))
       (setq current-territory (dice-kingdoms--create-territory rolled-col rolled-row))
       (when (not (dice-kingdoms--get-overlapping-owned-coordinates dice-kingdoms--territory-list current-territory))
 	(push current-territory dice-kingdoms--territory-list)
