@@ -67,7 +67,7 @@
   )
 
 (defun dice-kingdoms--get-overlapping-owned-coordinates (col row)
-  "Check if the given COL and ROW coordinate is already occupied.
+  "Get the overlapping coordinates for each territory.
 Considers all owned coordinates of each territory when checking."
   (let ((equal-list '()))
     (dolist (territory dice-kingdoms--territory-list)
@@ -84,11 +84,11 @@ Considers all owned coordinates of each territory when checking."
 
 (defun dice-kingdoms--get-initial-territory-coordinates (col row)
   "Gets the surronding coordinates for the given COL and ROW."
-  `((,col ,row)
-    (,(- col 1) ,(- row 1))
+  `((,(- col 1) ,(- row 1))
     (,col ,(- row 1))
     (,(+ col 1) ,(- row 1))
     (,(- col 1) ,row)
+    (,col ,row)
     (,(+ col 1) ,row)
     (,(- col 1) ,(+ row 1))
     (,col ,(+ row 1))
