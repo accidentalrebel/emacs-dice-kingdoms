@@ -80,21 +80,28 @@
     (dotimes (count num-of-territories)
       (setq rolled-col (+ (random (- play-area-width play-area-padding)) play-area-padding))
       (setq rolled-row (+ (random (- play-area-height play-area-padding)) play-area-padding))
-      (when (dice-kingdoms--is-area-occupied-by-territory rolled-col rolled-row)
+      (when (not (dice-kingdoms--get-overlapping-owned-coordinates rolled-col rolled-row))
 	(setq current-territory (dice-kingdoms--create-territory rolled-col rolled-row))
 	(dice-kingdoms--display-territory current-territory))
       )
     )
   )
 
-(defun dice-kingdoms--is-area-occupied-by-territory (col row)
+(defun dice-kingdoms--get-overlapping-owned-coordinates (col row)
   "Check if the given COL and ROW coordinate is already occupied.
 Considers all owned coordinates of each territory when checking."
-  (dolist (territory dice-kingdoms--territory-list)
-    
-    )
-  t
-  )
+  (let ((equal-list '()))
+    (dolist (territory dice-kingdoms--territory-list)
+      (dolist (territory-coordinate (dice-kingdoms--get-initial-territory-coordinates (plist-get territory ':col) (plist-get territory ':row)))
+	(dolist (to-check-coordinate (dice-kingdoms--get-initial-territory-coordinates col row))
+	  (when (and (eq (car territory-coordinate) (car to-check-coordinate))
+		     (eq (cadr territory-coordinate) (cadr to-check-coordinate)))
+	    (push territory-coordinate equal-list)
+	    )
+	  )
+	)
+      )
+    equal-list))
 
 (defun dice-kingdoms--get-initial-territory-coordinates (col row)
   "Gets the surronding coordinates for the given COL and ROW."
@@ -111,8 +118,6 @@ Considers all owned coordinates of each territory when checking."
 
 (defun dice-kingdoms--create-territory (col row)
   ""
-  (setq col 10)
-  (setq row 10)
   (let* ((owned (dice-kingdoms--get-initial-territory-coordinates col row))
 	 (territory-plist `(:col ,col :row ,row :owned ,owned)))
     (message "Added: %s" territory-plist)
