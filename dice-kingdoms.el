@@ -80,10 +80,16 @@
     (dotimes (count num-of-territories)
       (setq rolled-col (+ (random (- play-area-width play-area-padding)) play-area-padding))
       (setq rolled-row (+ (random (- play-area-height play-area-padding)) play-area-padding))
-      (setq current-territory (dice-kingdoms--create-territory rolled-col rolled-row))
-      (dice-kingdoms--display-territory current-territory)
+      (when (dice-kingdoms--is-area-occupied-by-territory rolled-col rolled-row)
+	(setq current-territory (dice-kingdoms--create-territory rolled-col rolled-row))
+	(dice-kingdoms--display-territory current-territory))
       )
     )
+  )
+
+(defun dice-kingdoms--is-area-occupied-by-territory ()
+  ""
+  
   )
 
 (defun dice-kingdoms--create-territory (col row)
