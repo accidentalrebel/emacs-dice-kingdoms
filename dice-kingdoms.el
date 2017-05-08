@@ -108,18 +108,22 @@ Considers all owned coordinates of each territory when checking."
   )
 
 (defun dice-kingdoms--display-territory (territory)
-  ""
+  "Print the TERRITORY and its owned coordiates onto the map."
   (let ((play-area-x (car dice-kingdoms--play-area-dimensions))
 	(play-area-y (nth 1 dice-kingdoms--play-area-dimensions))
 	(current-col (plist-get territory ':col))
 	(current-row (plist-get territory ':row)))
     (message "Placing at %s, %s" current-col current-row)
-    (coordinate-place-char-at (+ play-area-x current-col) (+ play-area-y current-row) "x")
+    (dolist (coordinate (plist-get territory ':owned))
+      (coordinate-place-char-at (+ play-area-x (car coordinate)) (+ play-area-y (cadr coordinate)) "x")
+      )
+    (coordinate-place-char-at (+ play-area-x current-col) (+ play-area-y current-row) "X")
     )
   )
 
 (defun dice-kingdoms--setup-play-area ()
-  ""
+  "Setup the play area.
+This is diferent from the game area.  The play area is the place where territories are placed."
   (coordinate-place-char-at-area (car dice-kingdoms--play-area-dimensions) (nth 1 dice-kingdoms--play-area-dimensions)
 		      (nth 2 dice-kingdoms--play-area-dimensions) (nth 3 dice-kingdoms--play-area-dimensions) "~")
   )
