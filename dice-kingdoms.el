@@ -42,32 +42,11 @@
   (erase-buffer)
   (coordinate-initialize-view-area dice-kingdoms--game-area-width dice-kingdoms--game-area-height ".")
   (dice-kingdoms--setup-play-area)
-  ;;  (dice-kingdoms--initialize-world)
   (dice-kingdoms--generate-map)
   )
 
 ;; SETUP
 ;;
-(defun dice-kingdoms--initialize-world ()
-  ""
-  (let* ((play-area-padding 4)
-	 (territory-padding 2)
-	 (num-of-territories-horizontal 8)
-	 (num-of-territories-vertical 3)
-	 (partition-width (/ (- (nth 2 dice-kingdoms--play-area-dimensions) (* play-area-padding)) num-of-territories-horizontal))
-	 (partition-height (/ (- (nth 3 dice-kingdoms--play-area-dimensions) (* play-area-padding)) num-of-territories-vertical))
-	 (territory-width (- partition-width (* 2 territory-padding)))
-	 (territory-height (- partition-height (* 2 territory-padding)))
-	 current-territory)
-    (dotimes (y-index num-of-territories-vertical)
-      (dotimes (x-index num-of-territories-horizontal)
-	(setq current-territory (dice-kingdoms--create-territory (+ (* x-index partition-width) (random territory-width) play-area-padding)
-								 (+ (* y-index partition-height) (random territory-height) play-area-padding)))
-	(dice-kingdoms--display-territory current-territory)
-	)
-      ))
-  )
-
 (defun dice-kingdoms--generate-map ()
   ""
   (let ((play-area-padding 4)
