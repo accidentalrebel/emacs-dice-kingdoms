@@ -5,6 +5,17 @@
 
 ;;; Code:
 
+(ert-deftest dice-kingdoms--get-owner-of-coordinate ()
+  (with-temp-buffer
+    (setq-local dice-kingdoms--territory-list `(,(dice-kingdoms--create-territory 10 10)))
+    (should (equal (dice-kingdoms--get-owner-of-coordinate '(10 10)) (car dice-kingdoms--territory-list)))
+    )
+  (with-temp-buffer
+    (setq-local dice-kingdoms--territory-list `(,(dice-kingdoms--create-territory 10 10)))
+    (should (equal (dice-kingdoms--get-owner-of-coordinate '(0 0)) nil))
+    )
+  )
+
 (ert-deftest dice-kingdoms--get-overlapping-owned-coordinates ()
   (with-temp-buffer
     (setq-local dice-kingdoms--territory-list `(,(dice-kingdoms--create-territory 10 10)))

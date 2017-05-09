@@ -49,7 +49,7 @@
 ;;
 (defun dice-kingdoms--generate-map ()
   ""
-  (let ((play-area-padding 2)
+  (let ((play-area-padding 3)
 	(num-of-territories 30)
 	(play-area-width (nth 2 dice-kingdoms--play-area-dimensions))
 	(play-area-height (nth 3 dice-kingdoms--play-area-dimensions))
@@ -69,8 +69,31 @@
 	  (setq roll-successful t)
 	  ))
       )
+    (dice-kingdoms--expand-territory (car dice-kingdoms--territory-list))
     )
   )
+
+(defun dice-kingdoms--expand-territory (territory)
+  "Expands the TERRITORY until it reaches a neighbor."
+  (let ((starting-tile (car (plist-get territory ':owned))))
+    (if (equal (dice-kingdoms--get-owner-of-coordinate starting-tile) nil)
+	(message "TO EXPAND!")
+      (message "CANT EXPAND!")
+      )
+    ))
+
+(defun dice-kingdoms--get-owner-of-coordinate (to-check-coordinate)
+  "Gets the owner at the given TO-CHECK-COORDINATE."
+  (catch 'found-owner
+    (dolist (territory dice-kingdoms--territory-list ())
+      (dolist (coordinate (plist-get territory ':owned))
+	(when (and (eq (car coordinate) (car to-check-coordinate))
+		   (eq (cadr coordinate) (cadr to-check-coordinate)))
+	  (throw 'found-owner territory)
+	  )
+	)
+      )
+    ))
 
 (defun dice-kingdoms--get-overlapping-owned-coordinates (territory-list to-check-territory)
   "Get the overlapping between all from TERRITORY-LIST and TO-CHECK-TERRITORY.
@@ -79,10 +102,10 @@ Considers all owned coordinates of each territory when checking."
     (dolist (territory territory-list)
       (dolist (territory-coordinate (plist-get territory ':owned))
 	(dolist (to-check-coordinate (plist-get to-check-territory ':owned))
-	  (message "%s ?= %s" territory-coordinate to-check-coordinate)
+	  ;;(message "%s ?= %s" territory-coordinate to-check-coordinate)
 	  (when (and (eq (car territory-coordinate) (car to-check-coordinate))
 		     (eq (cadr territory-coordinate) (cadr to-check-coordinate)))
-	    (message "EQUALLL!!!")
+	    ;;(message "EQUALLL!!!")
 	    (push territory-coordinate equal-list)
 	    )
 	  )
@@ -107,7 +130,7 @@ Considers all owned coordinates of each territory when checking."
   ""
   (let* ((owned (dice-kingdoms--get-initial-territory-coordinates col row))
 	 (territory-plist `(:col ,col :row ,row :owned ,owned)))
-    (message "Added: %s" territory-plist)
+    ;;(message "Added: %s" territory-plist)
     territory-plist
     )
   )
@@ -118,7 +141,7 @@ Considers all owned coordinates of each territory when checking."
 	(play-area-y (nth 1 dice-kingdoms--play-area-dimensions))
 	(current-col (plist-get territory ':col))
 	(current-row (plist-get territory ':row)))
-    (message "Placing at %s, %s" current-col current-row)
+    ;;(message "Placing at %s, %s" current-col current-row)
     (dolist (coordinate (plist-get territory ':owned))
       (coordinate-place-char-at (+ play-area-x (car coordinate)) (+ play-area-y (cadr coordinate)) "x")
       )
