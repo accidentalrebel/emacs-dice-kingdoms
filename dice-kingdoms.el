@@ -75,12 +75,27 @@
 
 (defun dice-kingdoms--expand-territory (territory)
   "Expands the TERRITORY until it reaches a neighbor."
-  (let ((starting-tile (car (plist-get territory ':owned))))
-    (if (equal (dice-kingdoms--get-owner-of-coordinate starting-tile) nil)
-	(message "TO EXPAND!")
-      (message "CANT EXPAND!")
-      )
-    ))
+  (let (coordinate-to-expand-from
+	coordinate-to-expand-to)
+    (dotimes (index 3)
+      (setq coordinate-to-expand-from (dice-kingdoms--roll-random-owned-coordinate territory))
+      (setq coordinate-to-expand-to (dice-kingdoms--get-coordinate-at-direction coordinate-to-expand-from))
+      (message "Start %s" coordinate-to-expand-from)
+      (if (equal (dice-kingdoms--get-owner-of-coordinate coordinate-to-expand-to) nil)
+	  (message "CAN EXPAND! %s" coordinate-to-expand-to)
+	(message "CANT EXPAND! %s" coordinate-to-expand-to))
+      )))
+
+(defun dice-kingdoms--roll-random-owned-coordinate (territory)
+  "Gets a random owned coordinate from a given TERRITORY."
+  (let ((owned (plist-get territory ':owned)))
+    (nth (random (length owned)) owned)))
+
+(defun dice-kingdoms--get-coordinate-at-direction (start-coordinate)
+  "Gets the coordinate from START-COORDINATE and a given DIRECTION."
+  (let ((col (car start-coordinate))
+	(row (cadr start-coordinate)))
+    `(,(+ col 1) ,row)))
 
 (defun dice-kingdoms--get-owner-of-coordinate (to-check-coordinate)
   "Gets the owner at the given TO-CHECK-COORDINATE."
