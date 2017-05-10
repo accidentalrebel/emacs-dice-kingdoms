@@ -79,7 +79,7 @@
 	coordinate-to-expand-to)
     (dotimes (index 3)
       (setq coordinate-to-expand-from (dice-kingdoms--roll-random-owned-coordinate territory))
-      (setq coordinate-to-expand-to (dice-kingdoms--get-coordinate-at-direction coordinate-to-expand-from))
+      (setq coordinate-to-expand-to (dice-kingdoms--get-coordinate-at-direction coordinate-to-expand-from (dice-kingdoms--roll-random-direction)))
       (message "Start %s" coordinate-to-expand-from)
       (if (equal (dice-kingdoms--get-owner-of-coordinate coordinate-to-expand-to) nil)
 	  (message "CAN EXPAND! %s" coordinate-to-expand-to)
@@ -91,11 +91,23 @@
   (let ((owned (plist-get territory ':owned)))
     (nth (random (length owned)) owned)))
 
-(defun dice-kingdoms--get-coordinate-at-direction (start-coordinate)
-  "Gets the coordinate from START-COORDINATE and a given DIRECTION."
+(defun dice-kingdoms--get-coordinate-at-direction (start-coordinate direction)
+  "Gets the coordinate from START-COORDINATE and a given DIRECTION.
+Directions can be of the following: n, e, s, w, ne, se, sw, nw."
   (let ((col (car start-coordinate))
 	(row (cadr start-coordinate)))
-    `(,(+ col 1) ,row)))
+    (message "Getting coordinate from %s with direction %s" start-coordinate direction)
+    (cond ((equal direction 'e)
+	   `(,(+ col 1) ,row))
+	  ((equal direction 'n)
+	   `(,col ,(- row 1)))
+	  (t  `(,col ,row))
+	  )
+    ))
+
+(defun dice-kingdoms--roll-random-direction ()
+  "Return a random direction."
+  (nth (random 8) '(n e s w ne se sw nw)))
 
 (defun dice-kingdoms--get-owner-of-coordinate (to-check-coordinate)
   "Gets the owner at the given TO-CHECK-COORDINATE."
